@@ -560,4 +560,34 @@ watch(
 onBeforeUnmount(() => {
   stopTimer();
 });
+
+definePageMeta({
+  title: "Partie - Le Jeu de la Complicité",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Partie du Jeu de la Complicité : tirez un mot, faites-le deviner à votre équipe et marquez un maximum de points en 3 minutes. Interface simple, chrono intégré et références pop culture.",
+    },
+    {
+      name: "keywords",
+      content:
+        "jeu de la complicité, partie en ligne, devinettes pop culture, jeu équipe, chronomètre, tirage de mots",
+    },
+    {
+      property: "og:title",
+      content: "Partie en cours - Jeu de la Complicité",
+    },
+    {
+      property: "og:description",
+      content:
+        "Faites deviner un mot à votre équipe avant les autres grâce à votre complicité. Chrono 3 minutes, points, tirages… Jouez en ligne gratuitement !",
+    },
+    {
+      property: "og:image",
+      content: "/cover.jpg",
+    },
+  ],
+});
+
 </script>
