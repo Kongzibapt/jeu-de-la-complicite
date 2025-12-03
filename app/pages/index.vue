@@ -40,7 +40,7 @@
               >
                 2 équipes
                 <br class="sm:hidden" />
-                <span class="text-xs text-slate-600">👫 (4 joueurs)</span>
+                <span class="text-xs">👫 (4 joueurs)</span>
               </button>
               <button
                 class="flex-1 px-3 py-2 rounded-xl border text-sm md:text-base"
@@ -50,7 +50,7 @@
               >
                 3 équipes
                 <br class="sm:hidden" />
-                <span class="text-xs text-slate-600">👬 (6 joueurs)</span>
+                <span class="text-xs">👬 (6 joueurs)</span>
               </button>
             </div>
           </div>
