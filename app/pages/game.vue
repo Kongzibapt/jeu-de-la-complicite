@@ -377,6 +377,64 @@
 </template>
 
 <script setup lang="ts">
+const siteName = "Jeu de la complicité";
+const canonicalUrl = "https://jeu-complicite.app/game";
+const pageTitle = "Jeu de la complicité | Partie en cours";
+const pageDescription =
+  "Suivez la manche en cours du Jeu de la complicité : scores, équipes et mot secret pour ce party game pastel et gratuit.";
+const keywords = [
+  "Jeu de la complicité",
+  "partie en cours",
+  "jeu d'équipe",
+  "jeu ambiance",
+  "jeu pop culture",
+].join(", ");
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Game",
+  name: pageTitle,
+  url: canonicalUrl,
+  description: pageDescription,
+  inLanguage: "fr",
+  applicationCategory: "GameApplication",
+  operatingSystem: "Web",
+};
+
+useSeoMeta({
+  title: pageTitle,
+  description: pageDescription,
+  ogTitle: pageTitle,
+  ogDescription: pageDescription,
+  ogUrl: canonicalUrl,
+  ogSiteName: siteName,
+  ogType: "website",
+  twitterCard: "summary_large_image",
+  twitterTitle: pageTitle,
+  twitterDescription: pageDescription,
+});
+
+useHead({
+  meta: [
+    {
+      name: "keywords",
+      content: keywords,
+    },
+  ],
+  link: [
+    {
+      rel: "canonical",
+      href: canonicalUrl,
+    },
+  ],
+  script: [
+    {
+      type: "application/ld+json",
+      innerHTML: JSON.stringify(structuredData),
+    },
+  ],
+});
+
 const {
   totalRounds,
   nbTeams,
@@ -559,26 +617,6 @@ watch(
 
 onBeforeUnmount(() => {
   stopTimer();
-});
-
-useHead({
-  script: [
-    {
-      type: "application/ld+json",
-      innerHTML: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Game",
-        name: "Le Jeu de la Complicité",
-        applicationCategory: "Game",
-        operatingSystem: "Web",
-        description:
-          "Jeu d'ambiance gratuit en ligne : faites deviner un mot de pop culture à votre équipe sans vous faire comprendre des autres groupes.",
-        inLanguage: "fr",
-        genre: ["Jeu d'ambiance", "Jeu de société en ligne", "Party game"],
-        url: "https://jeu-de-la-complicite.vercel.app",
-      }),
-    },
-  ],
 });
 
 </script>
