@@ -11,15 +11,11 @@ useHead({
 useHead({
   script: [
     {
-      async: true,
+      defer: true,
       src: "https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX",
-    }
-  ]
-});
-
-useHead({
-  script: [
+    },
     {
+      defer: true,
       innerHTML: `
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
