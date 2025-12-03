@@ -590,4 +590,24 @@ definePageMeta({
   ],
 });
 
+useHead({
+  script: [
+    {
+      type: "application/ld+json",
+      innerHTML: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Game",
+        name: "Le Jeu de la Complicité",
+        applicationCategory: "Game",
+        operatingSystem: "Web",
+        description:
+          "Jeu d'ambiance gratuit en ligne : faites deviner un mot de pop culture à votre équipe sans vous faire comprendre des autres groupes.",
+        inLanguage: "fr",
+        genre: ["Jeu d'ambiance", "Jeu de société en ligne", "Party game"],
+        url: "https://jeu-de-la-complicite.vercel.app",
+      }),
+    },
+  ],
+});
+
 </script>
