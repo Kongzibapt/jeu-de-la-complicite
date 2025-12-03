@@ -1,6 +1,8 @@
 <template>
   <div
     class="min-h-screen bg-linear-to-br from-pastelblue-500 via-pastelpink-500 to-pastelyellow-500 flex items-center justify-center p-4"
+    role="main"
+    aria-labelledby="index-title"
   >
     <div class="w-full max-w-3xl">
       <div class="bg-linear-to-br from-pastelblue-500 to-pastelpink-500 p-1 rounded-4xl shadow-2xl">
@@ -11,7 +13,7 @@
             <p class="text-xs uppercase tracking-[0.3em] text-pastelblue-500 font-semibold">
               🌈 Mode complicité
             </p>
-            <h1 class="text-3xl md:text-4xl font-bold text-slate-800">
+            <h1 id="index-title" class="text-3xl md:text-4xl font-bold text-slate-800">
               Jeu de la complicité
             </h1>
             <p class="text-slate-600">
@@ -25,13 +27,14 @@
             </h2>
 
         <div class="flex flex-col gap-3">
-            <label class="text-sm text-slate-700 flex items-center gap-2">
+            <label class="text-sm text-slate-700 flex items-center gap-2" id="teams-count-label">
               <span class="inline-flex w-2 h-2 rounded-full bg-pastelblue-500 animate-pulse"></span>
               Nombre d'équipes
             </label>
-            <div class="flex gap-3">
+            <div class="flex gap-3" role="group" aria-labelledby="teams-count-label">
               <button
                 class="flex-1 px-3 py-2 rounded-xl border text-sm md:text-base"
+                :aria-pressed="nbTeams === 2"
                 :class="nbTeams === 2 ? 'bg-pastelblue-500 border-pastelblue-500 font-semibold' : 'bg-white border-slate-300'"
                 @click="setNbTeams(2)"
               >
@@ -41,6 +44,7 @@
               </button>
               <button
                 class="flex-1 px-3 py-2 rounded-xl border text-sm md:text-base"
+                :aria-pressed="nbTeams === 3"
                 :class="nbTeams === 3 ? 'bg-pastelblue-500 border-pastelblue-500 font-semibold' : 'bg-white border-slate-300'"
                 @click="setNbTeams(3)"
               >
@@ -52,7 +56,7 @@
           </div>
 
           <div class="flex flex-col gap-3">
-            <label class="text-sm text-slate-700 flex items-center gap-2">
+            <label class="text-sm text-slate-700 flex items-center gap-2" id="teams-name-label">
                 <span class="inline-flex w-2 h-2 rounded-full bg-pastelblue-500 animate-pulse"></span>
                 Nom des équipes
             </label>
@@ -65,6 +69,7 @@
                 <span class="text-xs text-slate-500 w-16">Équipe {{ index + 1 }}</span>
                 <input
                   :value="team.name"
+                  :aria-describedby="'teams-name-label'"
                   class="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-sm focus:border-pastelblue-500 focus:ring-1 focus:ring-pastelblue-500 transition"
                   :placeholder="'Équipe ' + (index + 1)"
                   @input="(e: any) => updateTeamName(index, e.target.value)"

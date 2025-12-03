@@ -1,6 +1,8 @@
 <template>
   <div
     class="min-h-screen bg-linear-to-br from-pastelblue-500 via-pastelpink-500 to-pastelyellow-500 flex items-center justify-center p-4"
+    role="main"
+    aria-labelledby="game-title"
   >
     <div class="w-full max-w-5xl">
       <div class="bg-linear-to-br from-pastelblue-500 via-pastelpink-500 to-pastelyellow-500 p-1 rounded-[36px] shadow-2xl mb-20">
@@ -13,14 +15,14 @@
           <p class="text-xs uppercase tracking-[0.35em] text-pastelblue-500 font-semibold">
             🌈 Mode complicité
           </p>
-          <h1 class="text-3xl md:text-4xl font-bold text-slate-800">
+          <h1 id="game-title" class="text-3xl md:text-4xl font-bold text-slate-800">
             Jeu de la complicité
           </h1>
         </div>
-        <div class="flex gap-2">
-          <button
-            class="text-sm md:text-base px-4 py-2 rounded-full border border-pastelblue-500/60 bg-white/80 hover:bg-white transition flex items-center gap-2"
-            @click="openTeamsModal"
+          <div class="flex gap-2" role="group" aria-label="Actions principales">
+            <button
+              class="text-sm md:text-base px-4 py-2 rounded-full border border-pastelblue-500/60 bg-white/80 hover:bg-white transition flex items-center gap-2"
+              @click="openTeamsModal"
           >
             Modifier les équipes
           </button>
@@ -34,10 +36,10 @@
       </header>
 
       <!-- SECTION 1 : manche + mot -->
-      <section class="bg-white rounded-2xl shadow p-4 flex flex-col gap-4 border border-pastelblue-500/30">
-        <div class="flex flex-row justify-between gap-4">
+      <section class="bg-white rounded-2xl shadow p-4 flex flex-col gap-4 border border-pastelblue-500/30" aria-labelledby="round-section-title">
+        <div class="flex flex-row justify-between gap-4" role="group" aria-label="Informations de manche">
           <div class="flex-1">
-            <p class="text-xs uppercase tracking-wide text-slate-500">
+            <p id="round-section-title" class="text-xs uppercase tracking-wide text-slate-500">
               🎯 Manche
             </p>
             <p class="text-lg font-bold text-slate-800">
@@ -46,15 +48,14 @@
           </div>
 
           <!-- Timer -->
-          <div
-            class="text-right flex-1"
-          >
+          <div class="text-right flex-1">
             <p class="text-xs uppercase text-slate-500">
               ⏱ Temps
             </p>
             <p
               class="text-lg font-mono font-semibold"
               :class="timeLeft === 0 ? 'text-red-500' : 'text-slate-800'"
+              aria-live="polite"
             >
               {{ formattedTimeLeft }}
             </p>
@@ -131,7 +132,7 @@
           Cliquez sur le bouton correspondant :
         </p>
 
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-3" role="group" aria-label="Actions de manche">
           <!-- Mot trouvé par l'équipe active -->
           <button
             v-if="currentTeam"
