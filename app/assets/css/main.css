@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pastelblue-500: #A7C7E7;
+  --color-pastelpink-500: #FAD4D8;
+  --color-pastelgreen-500: #C7EFCF;
+  --color-pastelyellow-500: #FFF6B7;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
