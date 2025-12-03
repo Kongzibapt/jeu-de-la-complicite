@@ -1,32 +1,31 @@
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-pastelblue-500 via-pastelpink-500 to-pastelyellow-500 flex items-center justify-center p-4"
+    class="min-h-screen bg-linear-to-br from-pastelblue-500 via-pastelpink-500 to-pastelyellow-500 flex items-center justify-center p-4"
   >
-    <div
-      class="w-full max-w-5xl bg-white/80 backdrop-blur-md rounded-3xl shadow-xl p-6 md:p-10 flex flex-col gap-6 pb-24"
-    >
+    <div class="w-full max-w-5xl">
+      <div class="bg-linear-to-br from-pastelblue-500 via-pastelpink-500 to-pastelyellow-500 p-1 rounded-[36px] shadow-2xl mb-20">
+        <div
+          class="w-full bg-white/90 backdrop-blur-xl rounded-4xl p-6 md:p-10 flex flex-col gap-6"
+        >
       <!-- Header -->
       <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 class="text-3xl md:text-4xl font-bold text-slate-800">
-            Le jeu de la complicité
-          </h1>
-          <p class="text-slate-600 mt-1">
-            Manche {{ currentRound }} / {{ totalRounds }} — Au tour de :
-            <span class="font-bold">
-              {{ currentTeam?.name || "—" }}
-            </span>
+          <p class="text-xs uppercase tracking-[0.35em] text-pastelblue-500 font-semibold">
+            🌈 Mode complicité
           </p>
+          <h1 class="text-3xl md:text-4xl font-bold text-slate-800">
+            Jeu de la complicité
+          </h1>
         </div>
         <div class="flex gap-2">
-          <NuxtLink
-            to="/"
-            class="text-sm md:text-base px-4 py-2 rounded-full border border-slate-300 bg-white/70 hover:bg-white transition"
+          <button
+            class="text-sm md:text-base px-4 py-2 rounded-full border border-pastelblue-500/60 bg-white/80 hover:bg-white transition flex items-center gap-2"
+            @click="openTeamsModal"
           >
             Modifier les équipes
-          </NuxtLink>
+          </button>
           <button
-            class="text-sm md:text-base px-4 py-2 rounded-full border border-slate-300 bg-white/70 hover:bg-white transition"
+            class="text-sm md:text-base px-4 py-2 rounded-full border border-pastelpink-500/70 bg-white/80 hover:bg-white transition flex items-center gap-2"
             @click="showRules = true"
           >
             Règles du jeu
@@ -35,33 +34,23 @@
       </header>
 
       <!-- SECTION 1 : manche + mot -->
-      <section class="bg-white rounded-2xl shadow p-4 flex flex-col gap-4">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
+      <section class="bg-white rounded-2xl shadow p-4 flex flex-col gap-4 border border-pastelblue-500/30">
+        <div class="flex flex-row justify-between gap-4">
+          <div class="flex-1">
             <p class="text-xs uppercase tracking-wide text-slate-500">
-              Manche
+              🎯 Manche
             </p>
-            <p class="text-2xl font-bold text-slate-800">
+            <p class="text-lg font-bold text-slate-800">
               {{ currentRound }} / {{ totalRounds }}
-            </p>
-          </div>
-
-          <div class="text-right">
-            <p class="text-xs uppercase tracking-wide text-slate-500">
-              Au tour de
-            </p>
-            <p class="text-lg font-semibold text-slate-800">
-              {{ currentTeam?.name || "—" }}
             </p>
           </div>
 
           <!-- Timer -->
           <div
-            v-if="gameStarted && roundReady"
-            class="text-right"
+            class="text-right flex-1"
           >
-            <p class="text-xs uppercase tracking-wide text-slate-500">
-              Temps restant
+            <p class="text-xs uppercase text-slate-500">
+              ⏱ Temps
             </p>
             <p
               class="text-lg font-mono font-semibold"
@@ -83,14 +72,14 @@
         <!-- ÉTAT : En attente du bouton "Prêt" -->
         <div
           v-if="gameStarted && !roundReady && !gameOver"
-          class="mt-2 border border-dashed border-pastelblue-500 rounded-2xl p-6 bg-pastelblue-500/10 flex flex-col items-center gap-4"
+          class="mt-2 border border-dashed border-pastelblue-500 rounded-2xl p-3 bg-pastelblue-500/10 flex flex-col items-center gap-3"
         >
           <p class="text-sm text-slate-700 text-center">
-            <span class="font-semibold">{{ currentTeam?.name || 'Une équipe' }}</span>, cliquez sur
-            <span class="font-semibold">"Prêt"</span> quand vous êtes prêts à commencer la manche.
+            ⚡ <span class="font-semibold">{{ currentTeam?.name || 'Une équipe' }}</span><br />
+            Appuyez sur <span class="font-semibold">"Prêt"</span> pour lancer le mot surprise.
           </p>
           <button
-            class="px-6 py-3 rounded-full text-sm md:text-base font-semibold bg-pastelgreen-500 hover:bg-pastelgreen-500/80"
+            class="px-6 py-3 rounded-full text-sm md:text-base font-semibold bg-pastelblue-500 hover:bg-pastelblue-500/80 flex items-center gap-2"
             @click="handleReady"
           >
             Prêt
@@ -100,13 +89,9 @@
         <!-- Mot à faire deviner + rerolls + timer (une fois "Prêt") -->
         <div
           v-else
-          class="mt-2 border border-dashed border-pastelblue-500 rounded-2xl p-4 bg-pastelblue-500/10 flex flex-col items-center gap-3"
+          class="mt-2 border border-dashed border-pastelblue-500 rounded-2xl p-4 bg-pastelblue-500/10 flex flex-col items-center gap-2"
         >
-          <p class="text-sm text-slate-700 text-center">
-            La personne qui fait deviner lit le mot ci-dessous. Les autres regardent ailleurs 😉
-          </p>
-
-          <div class="text-center min-h-[3rem] flex items-center justify-center">
+          <div class="text-center flex items-center justify-center">
             <p
               v-if="secretWord"
               class="text-2xl md:text-3xl font-bold text-slate-900 tracking-wide select-none"
@@ -120,11 +105,11 @@
 
           <div class="flex flex-col items-center gap-2 mt-2">
             <button
-              class="px-4 py-2 rounded-full text-sm font-semibold bg-pastelblue-500 hover:bg-pastelblue-500/80 disabled:opacity-50"
+              class="px-4 py-2 rounded-full text-sm font-semibold bg-pastelblue-500 hover:bg-pastelblue-500/80 disabled:opacity-50 flex items-center gap-2"
               :disabled="!gameStarted || !roundReady || rerollsLeft === 0"
               @click="drawNewWord"
             >
-              Tirer un nouveau mot
+              🎲 Tirer un nouveau mot
             </button>
             <p class="text-xs text-slate-600">
               Nouveaux tirages restants :
@@ -137,13 +122,13 @@
       </section>
 
       <!-- SECTION 2 : actions de manche -->
-      <section class="bg-white rounded-2xl shadow p-4 flex flex-col gap-4">
-        <h2 class="font-semibold text-slate-800 text-lg">
-          Résultat de la manche
+      <section class="bg-white rounded-2xl shadow p-4 flex flex-col gap-4 border border-pastelgreen-500/30">
+        <h2 class="font-semibold text-slate-800 text-lg flex items-center gap-2">
+          🏆 Résultat de la manche
         </h2>
 
         <p class="text-sm text-slate-600">
-          Quand un mot est trouvé, appuyez sur le bouton correspondant à l’équipe qui a trouvé le mot en premier.
+          Cliquez sur le bouton correspondant :
         </p>
 
         <div class="flex flex-col gap-3">
@@ -155,7 +140,7 @@
             :disabled="!gameStarted || !roundReady"
             @click="handleAwardPoint(currentTeamIndex)"
           >
-            Mot trouvé par {{ currentTeam.name }}
+            🎉 Mot trouvé par {{ currentTeam.name }}
           </button>
 
           <!-- Mot volé par une autre équipe -->
@@ -167,31 +152,22 @@
                 :disabled="!gameStarted || !roundReady"
                 @click="handleAwardPoint(item.index)"
               >
-                Mot volé par {{ item.team.name }}
+                🥷 Mot volé par {{ item.team.name }}
               </button>
             </template>
           </div>
         </div>
 
-        <div
-          v-if="gameOver"
-          class="mt-3 p-3 rounded-xl bg-pastelyellow-500/60 text-sm text-slate-800"
-        >
-          <p class="font-semibold">Partie terminée 🎉</p>
-          <p v-if="winners.length === 1">
-            Victoire de <span class="font-bold">{{ winners[0]?.name }}</span>
-            avec {{ winners[0]?.score }} points !
-          </p>
-          <p v-else>
-            Égalité entre
-            <span class="font-bold">
-              {{ winners.map((w) => w.name).join(", ") }}
-            </span>
-            avec {{ winners[0]?.score }} points.
-          </p>
+        <div v-if="gameOver" class="flex flex-col gap-2">
           <button
-            class="mt-3 px-4 py-2 rounded-full text-sm font-semibold bg-slate-800 text-white hover:bg-slate-900"
-            @click="handleReset"
+            class="px-4 py-2 rounded-full text-sm font-semibold bg-pastelblue-500/80 text-slate-900 hover:bg-pastelblue-500 transition"
+            @click="showResultModal = true"
+          >
+            Voir le résultat final 🎉
+          </button>
+          <button
+            class="px-4 py-2 rounded-full text-sm font-semibold bg-slate-800 text-white hover:bg-slate-900"
+            @click="showReplayModal = true"
           >
             Rejouer une partie
           </button>
@@ -205,23 +181,22 @@
           Réinitialiser la partie
         </button>
       </section>
+        </div>
+      </div>
     </div>
 
     <!-- Scores en bas, centrés -->
     <div class="fixed bottom-4 left-1/2 -translate-x-1/2 w-full max-w-3xl px-4">
-      <div class="rounded-3xl p-0.5 bg-pastelblue-500 shadow-2xl">
+      <div class="rounded-3xl p-0.5 bg-linear-to-r from-pastelblue-500 via-pastelgreen-500 to-pastelpink-500 shadow-2xl">
         <div
           class="bg-white/95 backdrop-blur-md rounded-[calc(1.5rem-2px)] px-4 py-3 flex flex-col items-center justify-between gap-3"
         >
-          <p class="text-xs uppercase tracking-wide text-pastelblue-500 font-extrabold flex items-center gap-2">
-            Scores
-          </p>
           <div class="flex flex-wrap justify-center gap-3 w-full">
             <div
               v-for="(team, index) in teams"
               :key="team.name + index"
-              class="px-3 py-2 rounded-xl flex items-center gap-2 transition-colors"
-              :class="index === currentTeamIndex ? 'bg-pastelgreen-500/70 text-slate-900' : 'bg-slate-100 text-slate-700'"
+              class="px-3 py-2 rounded-xl flex items-center gap-2 transition-colors border"
+              :class="index === currentTeamIndex ? 'bg-pastelgreen-500/70 text-slate-900 border-pastelgreen-500/60' : 'bg-slate-100 text-slate-700 border-slate-200'"
             >
               <span class="text-xs font-semibold">
                 {{ team.name }}
@@ -277,6 +252,127 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal résultat -->
+    <div
+      v-if="showResultModal"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-3xl max-w-md w-full mx-4 p-6 shadow-2xl relative text-center">
+        <button
+          class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700"
+          @click="showResultModal = false"
+        >
+          ✕
+        </button>
+        <div class="flex flex-col items-center gap-3">
+          <div class="text-5xl animate-bounce">🏆</div>
+          <h2 class="text-2xl font-bold text-slate-800">
+            Partie terminée
+          </h2>
+          <p v-if="winners.length === 1" class="text-slate-700">
+            Victoire de <span class="font-bold text-pastelblue-500">{{ winners[0]?.name }}</span>
+            avec {{ winners[0]?.score }} points !
+          </p>
+          <p v-else class="text-slate-700">
+            Égalité entre
+            <span class="font-bold text-pastelblue-500">
+              {{ winners.map((w) => w.name).join(", ") }}
+            </span>
+            avec {{ winners[0]?.score }} points.
+          </p>
+          <button
+            class="mt-2 px-4 py-2 rounded-full text-sm font-semibold bg-slate-800 text-white hover:bg-slate-900"
+            @click="showReplayModal = true"
+          >
+            Rejouer une partie
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal modification équipes -->
+    <div
+      v-if="showTeamsModal"
+      class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-3xl max-w-md w-full mx-4 p-6 shadow-2xl relative">
+        <button
+          class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700"
+          @click="showTeamsModal = false"
+        >
+          ✕
+        </button>
+        <h2 class="text-2xl font-bold text-slate-800 mb-2 text-center">
+          Modifier les équipes
+        </h2>
+        <div class="flex flex-col gap-3">
+          <div
+            v-for="(name, index) in tempTeamNames"
+            :key="`edit-team-${index}`"
+            class="flex flex-col gap-1"
+          >
+            <label class="text-xs uppercase tracking-wide text-slate-500">
+              Équipe {{ index + 1 }}
+            </label>
+            <input
+              v-model="tempTeamNames[index]"
+              class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-pastelblue-500 focus:ring-1 focus:ring-pastelblue-500"
+              :placeholder="`Nom de l'équipe ${index + 1}`"
+            />
+          </div>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 mt-4">
+          <button
+            class="flex-1 px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200"
+            @click="showTeamsModal = false"
+          >
+            Annuler
+          </button>
+          <button
+            class="flex-1 px-4 py-2 rounded-full text-sm font-semibold bg-pastelgreen-500 text-slate-900 hover:bg-pastelgreen-500/80"
+            @click="saveTeamNames"
+          >
+            Enregistrer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal rejouer -->
+    <div
+      v-if="showReplayModal"
+      class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-3xl max-w-md w-full mx-4 p-6 shadow-2xl relative">
+        <button
+          class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700"
+          @click="showReplayModal = false"
+        >
+          ✕
+        </button>
+        <h2 class="text-2xl font-bold text-slate-800 mb-2 text-center">
+          Nouvelle partie ?
+        </h2>
+        <p class="text-sm text-slate-600 text-center mb-4">
+          Choisis si tu gardes les mêmes équipes ou si tu en crées de nouvelles.
+        </p>
+        <div class="flex flex-col gap-3">
+          <button
+            class="px-4 py-3 rounded-xl text-sm font-semibold bg-pastelgreen-500 text-slate-900 hover:bg-pastelgreen-500/80"
+            @click="handleReplaySameTeams"
+          >
+            🎯 Même équipes
+          </button>
+          <button
+            class="px-4 py-3 rounded-xl text-sm font-semibold bg-pastelpink-500 text-slate-900 hover:bg-pastelpink-500/80"
+            @click="handleReplayNewTeams"
+          >
+            ✏️ Nouvelles équipes
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -299,9 +395,17 @@ const {
   awardPoint,
   resetGame,
   startRoundIfNeeded,
+  storageHydrated,
+  startGame,
+  updateTeamName,
 } = useCompliciteGame();
 
 const showRules = ref(false);
+const showResultModal = ref(false);
+const showReplayModal = ref(false);
+const showTeamsModal = ref(false);
+const tempTeamNames = ref<string[]>([]);
+const router = useRouter();
 
 /**
  * État : manche en cours ou en attente du bouton "Prêt"
@@ -315,6 +419,26 @@ const ROUND_DURATION = 3 * 60; // 180s
 const timeLeft = ref(ROUND_DURATION);
 const timerRunning = ref(false);
 let timerId: ReturnType<typeof setInterval> | null = null;
+
+const hasNamedTeams = computed(() =>
+  teams.value
+    .slice(0, nbTeams.value)
+    .every((team) => (team?.name ?? "").trim().length > 0)
+);
+
+if (import.meta.client) {
+  watch(
+    () => storageHydrated.value,
+    (hydrated) => {
+      if (!hydrated) return;
+      if (!hasNamedTeams.value) {
+        router.replace("/");
+      }
+    },
+    { immediate: true, flush: "post" }
+  );
+}
+
 
 const formattedTimeLeft = computed(() => {
   const minutes = Math.floor(timeLeft.value / 60);
@@ -380,6 +504,41 @@ function handleReset() {
   roundReady.value = false;
   timeLeft.value = ROUND_DURATION;
   resetGame();
+  showResultModal.value = false;
+  showReplayModal.value = false;
+  router.push("/");
+}
+
+function handleReplaySameTeams() {
+  stopTimer();
+  roundReady.value = false;
+  timeLeft.value = ROUND_DURATION;
+  showReplayModal.value = false;
+  showResultModal.value = false;
+  const restarted = startGame();
+  if (!restarted) {
+    router.push("/");
+  }
+}
+
+function handleReplayNewTeams() {
+  showReplayModal.value = false;
+  showResultModal.value = false;
+  handleReset();
+}
+
+function openTeamsModal() {
+  tempTeamNames.value = teams.value
+    .slice(0, nbTeams.value)
+    .map((team) => team.name);
+  showTeamsModal.value = true;
+}
+
+function saveTeamNames() {
+  tempTeamNames.value.forEach((name, index) => {
+    updateTeamName(index, name);
+  });
+  showTeamsModal.value = false;
 }
 
 /**
@@ -391,6 +550,9 @@ watch(
     if (val) {
       stopTimer();
       roundReady.value = false;
+      showResultModal.value = true;
+    } else {
+      showResultModal.value = false;
     }
   }
 );

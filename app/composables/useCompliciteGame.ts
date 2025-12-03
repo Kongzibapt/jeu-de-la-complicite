@@ -1,19 +1,33 @@
 // composables/useCompliciteGame.ts
 import names from "@/data/names";
-import { computed } from "vue";
+import { computed, watch } from "vue";
+
+const STORAGE_KEY = "complicite-game-state";
 
 export interface Team {
   name: string;
   score: number;
 }
 
+type PersistedGameState = {
+  nbTeams: 2 | 3;
+  teams: Team[];
+  currentRound: number;
+  currentTeamIndex: number;
+  secretWord: string | null;
+  usedIndices: number[];
+  gameStarted: boolean;
+  gameOver: boolean;
+  rerollsLeft: number;
+};
+
 export const useCompliciteGame = () => {
   const totalRounds = 10;
 
   const nbTeams = useState<2 | 3>("nbTeams", () => 2);
   const teams = useState<Team[]>("teams", () => [
-    { name: "Équipe 1", score: 0 },
-    { name: "Équipe 2", score: 0 },
+    { name: "", score: 0 },
+    { name: "", score: 0 },
   ]);
 
   const currentRound = useState<number>("currentRound", () => 1);
@@ -22,9 +36,125 @@ export const useCompliciteGame = () => {
   const usedIndices = useState<number[]>("usedIndices", () => []);
   const gameStarted = useState<boolean>("gameStarted", () => false);
   const gameOver = useState<boolean>("gameOver", () => false);
+  const storageHydrated = useState<boolean>("complicite:storage-hydrated", () => false);
 
   const maxRerollsPerRound = 3;
   const rerollsLeft = useState<number>("rerollsLeft", () => maxRerollsPerRound);
+
+  function readPersistedState(): Partial<PersistedGameState> | null {
+    if (typeof window === "undefined") return null;
+    try {
+      const raw = window.sessionStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw) as Partial<PersistedGameState>;
+    } catch {
+      return null;
+    }
+  }
+
+  function writePersistedState(state: PersistedGameState) {
+    if (typeof window === "undefined") return;
+    try {
+      window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch {
+      // Ignore quota/security errors silently
+    }
+  }
+
+  function snapshotState(): PersistedGameState {
+    return {
+      nbTeams: nbTeams.value,
+      teams: teams.value.map((team) => ({ ...team })),
+      currentRound: currentRound.value,
+      currentTeamIndex: currentTeamIndex.value,
+      secretWord: secretWord.value,
+      usedIndices: [...usedIndices.value],
+      gameStarted: gameStarted.value,
+      gameOver: gameOver.value,
+      rerollsLeft: rerollsLeft.value,
+    };
+  }
+
+  function ensureTeamSlots(targetLength: number = nbTeams.value) {
+    if (teams.value.length < targetLength) {
+      const missing = targetLength - teams.value.length;
+      for (let i = 0; i < missing; i++) {
+        teams.value.push({ name: "", score: 0 });
+      }
+    } else if (teams.value.length > targetLength) {
+      teams.value = teams.value.slice(0, targetLength);
+    }
+  }
+
+  function applyPersistedState(state: Partial<PersistedGameState>) {
+    if (!state) return;
+    if (state.nbTeams === 2 || state.nbTeams === 3) {
+      nbTeams.value = state.nbTeams;
+    }
+
+    if (Array.isArray(state.teams) && state.teams.length) {
+      const normalized = state.teams
+        .slice(0, 3)
+        .map((team) => ({
+          name: typeof team?.name === "string" ? team.name : "",
+          score: typeof team?.score === "number" ? team.score : 0,
+        }));
+
+      teams.value = normalized;
+    }
+    ensureTeamSlots();
+
+    if (typeof state.currentRound === "number" && state.currentRound >= 1) {
+      currentRound.value = state.currentRound;
+    }
+
+    if (typeof state.currentTeamIndex === "number") {
+      currentTeamIndex.value = state.currentTeamIndex;
+    }
+
+    if (
+      typeof state.secretWord === "string" ||
+      state.secretWord === null
+    ) {
+      secretWord.value = state.secretWord ?? null;
+    }
+
+    if (Array.isArray(state.usedIndices)) {
+      usedIndices.value = state.usedIndices.map((idx) => Number(idx) || 0);
+    }
+
+    if (typeof state.gameStarted === "boolean") {
+      gameStarted.value = state.gameStarted;
+    }
+
+    if (typeof state.gameOver === "boolean") {
+      gameOver.value = state.gameOver;
+    }
+
+    if (typeof state.rerollsLeft === "number") {
+      rerollsLeft.value = state.rerollsLeft;
+    }
+  }
+
+  if (import.meta.client && !storageHydrated.value) {
+    const savedState = readPersistedState();
+    if (savedState) {
+      applyPersistedState(savedState);
+    }
+    ensureTeamSlots();
+    storageHydrated.value = true;
+  }
+
+  if (import.meta.client) {
+    watch(
+      () => snapshotState(),
+      (state) => {
+        writePersistedState(state);
+      },
+      { deep: true }
+    );
+  }
+  
 
   const currentTeam = computed(() => teams.value[currentTeamIndex.value] || null);
 
@@ -39,21 +169,27 @@ export const useCompliciteGame = () => {
     return teams.value.filter((t) => t.score === maxScore);
   });
 
+  const canStartGame = computed(() =>
+    teams.value
+      .slice(0, nbTeams.value)
+      .every((team) => team.name.trim().length > 0)
+  );
+
   function setNbTeams(n: 2 | 3) {
     nbTeams.value = n;
     if (teams.value.length > n) {
       teams.value = teams.value.slice(0, n);
     } else if (teams.value.length < n) {
       for (let i = teams.value.length; i < n; i++) {
-        teams.value.push({ name: `Équipe ${i + 1}`, score: 0 });
+        teams.value.push({ name: "", score: 0 });
       }
     }
   }
 
   function updateTeamName(index: number, name: string) {
-    if (teams.value[index]) {
-      teams.value[index].name = name || `Équipe ${index + 1}`;
-    }
+    const team = teams.value[index];
+    if (!team) return;
+    team.name = name;
   }
 
   function getRandomIndex(): number {
@@ -103,7 +239,11 @@ export const useCompliciteGame = () => {
     }
   }
 
-  function startGame() {
+  function startGame(): boolean {
+    if (!canStartGame.value) {
+      return false;
+    }
+
     gameStarted.value = true;
     gameOver.value = false;
     currentRound.value = 1;
@@ -113,12 +253,15 @@ export const useCompliciteGame = () => {
     secretWord.value = null;
 
     teams.value = teams.value.slice(0, nbTeams.value);
-    teams.value.forEach((t, i) => {
-      if (!t.name) t.name = `Équipe ${i + 1}`;
+    teams.value.forEach((t) => {
+      t.name = t.name.trim();
       t.score = 0;
     });
 
+    writePersistedState(snapshotState());
+
     // On attend maintenant le clic sur "Prêt" pour tirer le premier mot
+    return true;
   }
 
   function resetGame() {
@@ -130,8 +273,8 @@ export const useCompliciteGame = () => {
     usedIndices.value = [];
     rerollsLeft.value = maxRerollsPerRound;
 
-    teams.value = Array.from({ length: nbTeams.value }, (_, i) => ({
-      name: `Équipe ${i + 1}`,
+    teams.value = Array.from({ length: nbTeams.value }, () => ({
+      name: "",
       score: 0,
     }));
   }
@@ -184,6 +327,8 @@ export const useCompliciteGame = () => {
     currentTeam,
     otherTeams,
     winners,
+    canStartGame,
+    storageHydrated,
 
     setNbTeams,
     updateTeamName,

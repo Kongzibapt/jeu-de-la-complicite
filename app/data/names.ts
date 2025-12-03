@@ -1,32 +1,290 @@
-// data/names.ts
-const names: string[] = [
-  // Musique
-  "Taylor Swift", "Beyoncé", "Drake", "The Weeknd", "Billie Eilish",
-  "Dua Lipa", "Ed Sheeran", "Ariana Grande", "Harry Styles", "Bad Bunny",
-  "Travis Scott", "Kendrick Lamar", "Olivia Rodrigo", "Rosalía", "Doja Cat",
-  "SZA", "Post Malone", "Imagine Dragons", "Coldplay", "Bruno Mars",
+const popCulture = [
+  "Harry Potter",
+  "Hermione Granger",
+  "Ron Weasley",
+  "Hagrid",
+  "Voldemort",
+  "Dumbledore",
+  "Severus Snape",
+  "Draco Malfoy",
 
-  // Ciné / séries
-  "Iron Man", "Captain America", "Spider-Man", "Black Panther", "Thor",
-  "Loki", "Wanda Maximoff", "Doctor Strange", "Batman", "Joker",
-  "Harley Quinn", "Wonder Woman", "Darth Vader", "Luke Skywalker",
-  "Hermione Granger", "Harry Potter", "Ron Weasley", "Jon Snow",
-  "Daenerys Targaryen", "Walter White", "Jesse Pinkman", "Eleven",
-  "Vecna", "Geralt de Riv", "Yennefer", "Mario", "Luigi", "Peach",
+  "Luke Skywalker",
+  "Darth Vader",
+  "Yoda",
+  "Han Solo",
+  "Leia Organa",
+  "R2-D2",
+  "C-3PO",
+  "Kylo Ren",
+  "Rey",
+  "BB-8",
 
-  // Jeux vidéo
-  "Fortnite", "Minecraft", "League of Legends", "Valorant", "GTA V",
-  "Zelda", "Link", "Animal Crossing", "Pokémon Pikachu", "Mario Kart",
-  "FIFA", "Call of Duty", "Cyberpunk 2077", "Among Us", "Kratos",
+  "Iron Man",
+  "Tony Stark",
+  "Captain America",
+  "Steve Rogers",
+  "Thor",
+  "Loki",
+  "Hulk",
+  "Black Widow",
+  "Hawkeye",
+  "Doctor Strange",
+  "Spider-Man",
+  "Peter Parker",
+  "Black Panther",
+  "Wanda Maximoff",
+  "Vision",
 
-  // Internet / pop
-  "MrBeast", "PewDiePie", "Squeezie", "Mister V", "Natoo",
-  "Kylian Mbappé", "Lionel Messi", "Cristiano Ronaldo", "Zidane",
-  "Elon Musk", "Mark Zuckerberg", "Barbie", "Ken", "Wednesday Addams",
+  "Batman",
+  "Bruce Wayne",
+  "The Joker",
+  "Harley Quinn",
+  "Superman",
+  "Wonder Woman",
+  "Aquaman",
+  "Flash",
 
-  // → Ajoute ici tout ce que tu veux :
-  // artistes FR, YouTubeurs, streamers Twitch, politiques, TikTok, etc.
-  // L’objectif : dépasser largement les 1000 entrées.
+  "Frodo Baggins",
+  "Gandalf",
+  "Aragorn",
+  "Legolas",
+  "Gollum",
+  "Sauron",
+
+  "Jon Snow",
+  "Daenerys Targaryen",
+  "Tyrion Lannister",
+  "Arya Stark",
+  "Cersei Lannister",
+  "Night King",
+
+  "Walter White",
+  "Jesse Pinkman",
+  "Saul Goodman",
+  "Gus Fring",
+
+  "Eleven",
+  "Vecna",
+  "Mike Wheeler",
+
+  "Omar Sy",
+  "Lupin",
+  "Assane Diop",
+
+  "Emily Cooper",
+  "Geralt de Riv",
+  "Yennefer",
+  "Ciri",
+
+  // Films d’animation & autres licences
+  "Simba",
+  "Nala",
+  "Scar",
+  "Buzz l’Éclair",
+  "Woody",
+  "Shrek",
+  "Fiona",
+  "Po Kung Fu Panda",
+  "Hiccup",
+  "Toothless",
+
+  // Français
+  "Astérix",
+  "Obélix",
+  "Panoramix",
+  "Spider-Cochon",
+  "OSS 117",
+  "Hubert Bonisseur de La Bath",
+  "Brice de Nice",
+  "Chouchou",
+  "Rabbi Jacob",
+  "La Famille Bélier",
+  "Intouchables",
+  "Les Kaïra",
 ];
 
-export default names;
+const musique = [
+  // Artistes internationaux
+  "Taylor Swift",
+  "Beyoncé",
+  "Rihanna",
+  "Drake",
+  "Kanye West",
+  "The Weeknd",
+  "Billie Eilish",
+  "Ariana Grande",
+  "Dua Lipa",
+  "Ed Sheeran",
+  "Harry Styles",
+  "Olivia Rodrigo",
+  "Selena Gomez",
+  "Shakira",
+  "Bruno Mars",
+  "Lady Gaga",
+  "Justin Bieber",
+  "Bad Bunny",
+  "Travis Scott",
+  "SZA",
+  "Doja Cat",
+  "Post Malone",
+  "Imagine Dragons",
+  "Coldplay",
+  "Eminem",
+  "Linkin Park",
+  "Metallica",
+
+  // Artistes francophones
+  "Aya Nakamura",
+  "Stromae",
+  "Angèle",
+  "Gims",
+  "Vianney",
+  "Maître Gims",
+  "Dadju",
+  "Ninho",
+  "Vald",
+  "PNL",
+  "Orelsan",
+  "Soprano",
+  "Jul",
+  "SCH",
+  "Booba",
+  "Diam’s",
+  "M Pokora",
+  "Johnny Hallyday",
+  "Florent Pagny",
+  "Zazie",
+  "Mylène Farmer",
+
+  // Groupes célèbres
+  "Daft Punk",
+  "Queen",
+  "The Beatles",
+  "Nirvana",
+  "AC/DC",
+  "Black Eyed Peas",
+  "Maroon 5",
+  "Red Hot Chili Peppers",
+];
+
+const jeuxVideo = [
+  "Mario",
+  "Luigi",
+  "Princesse Peach",
+  "Bowser",
+  "Yoshi",
+  "Donkey Kong",
+  "Link",
+  "Zelda",
+  "Ganondorf",
+
+  "Sonic",
+  "Tails",
+  "Knuckles",
+
+  "Pikachu",
+  "Bulbizarre",
+  "Salamèche",
+  "Carapuce",
+  "Mewtwo",
+  "Ronflex",
+  "Evoli",
+
+  "Lara Croft",
+  "Nathan Drake",
+  "Kratos",
+  "Atreus",
+
+  "Master Chief",
+  "Cortana",
+
+  "Geralt",
+  "Yennefer",
+  "Ciri",
+
+  "Trevor Philips",
+  "Michael De Santa",
+  "Franklin Clinton",
+
+  "Steve Minecraft",
+  "Alex Minecraft",
+  "Creeper",
+  "Enderman",
+
+  "Agent 47",
+  "Ezio Auditore",
+
+  "Sackboy",
+  "Joel",
+  "Ellie",
+
+  "Fortnite",
+  "Among Us",
+  "League of Legends",
+  "Valorant",
+  "Overwatch",
+  "Genshin Impact",
+  "Cyberpunk 2077",
+];
+
+const lieux = [
+  "Paris",
+  "Marseille",
+  "Lyon",
+  "Toulouse",
+  "Nice",
+  "Montpellier",
+  "Bordeaux",
+  "Nantes",
+  "Lille",
+  "Strasbourg",
+
+  "Tour Eiffel",
+  "Arc de Triomphe",
+  "Mont Saint-Michel",
+  "Château de Versailles",
+
+  "New York",
+  "San Francisco",
+  "Los Angeles",
+  "Las Vegas",
+  "Chicago",
+  "Miami",
+
+  "Statue de la Liberté",
+  "Central Park",
+  "Times Square",
+  "Golden Gate Bridge",
+
+  "Tokyo",
+  "Kyoto",
+  "Osaka",
+
+  "Londres",
+  "Big Ben",
+  "Tower Bridge",
+  "Buckingham Palace",
+
+  "Rome",
+  "Colisée",
+  "Vatican",
+  "Pise",
+  "Venise",
+
+  "Berlin",
+  "Barcelone",
+  "Madrid",
+
+  "Rio de Janeiro",
+  "Christ Rédempteur",
+
+  "Sydney",
+  "Opéra de Sydney",
+];
+
+export default [
+  ...popCulture,
+  ...musique,
+  ...jeuxVideo,
+  ...lieux
+];
