@@ -84,7 +84,7 @@
         </section>
 
         <p class="text-xs text-slate-500 text-center flex items-center justify-center gap-1">
-          Une grande banque de références pop est prête pour le Jeu de la complicité.
+          Une grande banque de références pop est prête pour le Jeu de la complicité. (+480 mots)
         </p>
       </div>
     </div>
