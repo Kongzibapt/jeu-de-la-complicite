@@ -4,6 +4,13 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ['./app/assets/css/main.css'],
+  app: {
+    head: {
+      htmlAttrs: {
+        lang: "fr",
+      },
+    },
+  },
   vite: {
     plugins: [
       tailwindcss(),
@@ -33,6 +40,5 @@ export default defineNuxtConfig({
     sitemap: ["https://jeu-de-la-complicite.vercel.app/sitemap.xml"],
   },
 });
-
 
 
