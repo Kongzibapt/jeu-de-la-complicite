@@ -127,10 +127,6 @@ const structuredData = {
   },
 };
 
-definePageMeta({
-  title: pageTitle,
-});
-
 useSeoMeta({
   title: pageTitle,
   description: pageDescription,
@@ -180,34 +176,4 @@ function goToGame() {
   }
   router.push("/game");
 }
-
-definePageMeta({
-  title: "Le Jeu de la Complicité - Jeu d'ambiance gratuit en ligne",
-  meta: [
-    {
-      name: "description",
-      content:
-        "Découvrez le Jeu de la Complicité, un jeu d’ambiance gratuit en ligne inspiré de la pop culture. Faites deviner un mot à votre équipe avant les autres. Simple, fun et idéal entre amis.",
-    },
-    {
-      name: "keywords",
-      content:
-        "jeu de la complicité, jeu ambiance en ligne, jeu gratuit, pop culture, devinettes, jeu entre amis, jeu de soirée, jeu collaboratif, jeu équipe",
-    },
-    {
-      property: "og:title",
-      content: "Le Jeu de la Complicité - Jeu d'ambiance gratuit en ligne",
-    },
-    {
-      property: "og:description",
-      content:
-        "Un jeu d’ambiance gratuit où vous devez faire deviner un mot à votre équipe sans que les adversaires ne comprennent. Pop culture, fun et complicité !",
-    },
-    {
-      property: "og:image",
-      content: "/cover.jpg",
-    },
-  ],
-});
-
 </script>
