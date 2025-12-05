@@ -100,8 +100,8 @@
 <script setup lang="ts">
 const router = useRouter();
 const siteName = "Jeu de la complicité";
-const canonicalUrl = "https://jeu-complicite.app/";
-const pageTitle = "Jeu de la complicité | Jeu coopératif pastel en ligne";
+const canonicalUrl = "https://jeu-de-la-complicite.vercel.app/";
+const pageTitle = "Jeu de la complicité | Jeu coopératif en ligne";
 const pageDescription =
   "Prépare ton Jeu de la complicité : configure les équipes, personnalise leurs noms et lance un party game moderne 100% en ligne.";
 const keywords = [
