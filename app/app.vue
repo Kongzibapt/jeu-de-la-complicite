@@ -25,7 +25,6 @@ useHead({
     }
   ]
 });
-
 </script>
 
 
