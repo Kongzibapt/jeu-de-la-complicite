@@ -382,7 +382,7 @@ const siteName = "Jeu de la complicité";
 const canonicalUrl = "https://jeu-de-la-complicite.vercel.app/game";
 const pageTitle = "Jeu de la complicité | Partie en cours";
 const pageDescription =
-  "Suivez la manche en cours du Jeu de la complicité : scores, équipes et mot secret pour ce party game pastel et gratuit.";
+  "Suivez la manche en cours du Jeu de la complicité : scores, équipes et mot secret pour ce jeu gratuit.";
 const keywords = [
   "Jeu de la complicité",
   "partie en cours",

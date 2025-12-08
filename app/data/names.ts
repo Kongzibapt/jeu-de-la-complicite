@@ -1,40 +1,37 @@
-const popCulture = [
+const names = [
+// PopCulture
   "Harry Potter",
   "Hermione Granger",
   "Ron Weasley",
   "Hagrid",
   "Voldemort",
   "Dumbledore",
-  "Severus Snape",
-  "Draco Malfoy",
-
+  "Severus Rogue",
+  "Drago Malefoy",
+  "Neville Londubat",
+  "Dobby",
+  "Star Wars",
   "Luke Skywalker",
-  "Darth Vader",
+  "Dark Vador",
   "Yoda",
   "Han Solo",
   "Leia Organa",
+  "Obi-Wan Kenobi",
   "R2-D2",
   "C-3PO",
   "Kylo Ren",
-  "Rey",
   "BB-8",
-
   "Iron Man",
   "Tony Stark",
   "Captain America",
-  "Steve Rogers",
   "Thor",
   "Loki",
   "Hulk",
   "Black Widow",
-  "Hawkeye",
   "Doctor Strange",
   "Spider-Man",
   "Peter Parker",
   "Black Panther",
-  "Wanda Maximoff",
-  "Vision",
-
   "Batman",
   "Bruce Wayne",
   "The Joker",
@@ -43,67 +40,50 @@ const popCulture = [
   "Wonder Woman",
   "Aquaman",
   "Flash",
-
-  "Frodo Baggins",
+  "Seigneur des anneaux",
+  "Frodon Sacquet",
   "Gandalf",
   "Aragorn",
   "Legolas",
   "Gollum",
   "Sauron",
-
+  "Game of Thrones",
   "Jon Snow",
   "Daenerys Targaryen",
   "Tyrion Lannister",
   "Arya Stark",
   "Cersei Lannister",
-  "Night King",
-
+  "Breaking Bad",
   "Walter White",
-  "Jesse Pinkman",
   "Saul Goodman",
-  "Gus Fring",
-
+  "Stranger Things",
   "Eleven",
-  "Vecna",
   "Mike Wheeler",
-
-  "Omar Sy",
   "Lupin",
+  "Omar Sy",
   "Assane Diop",
-
+  "Emily in Paris",
   "Emily Cooper",
-  "Geralt de Riv",
-  "Yennefer",
-  "Ciri",
-
   // Films d’animation & autres licences
+  "Le Roi Lion",
   "Simba",
-  "Nala",
   "Scar",
-  "Buzz l’Éclair",
+  "Toy Story",
+  "Buzz l'Éclair",
   "Woody",
   "Shrek",
   "Fiona",
-  "Po Kung Fu Panda",
-  "Hiccup",
-  "Toothless",
-
+  "Kung Fu Panda",
   // Français
   "Astérix",
   "Obélix",
   "Panoramix",
-  "Spider-Cochon",
+  "Tintin",
   "OSS 117",
-  "Hubert Bonisseur de La Bath",
   "Brice de Nice",
-  "Chouchou",
   "Rabbi Jacob",
-  "La Famille Bélier",
   "Intouchables",
-  "Les Kaïra",
-];
-
-const musique = [
+// Musique
   // Artistes internationaux
   "Taylor Swift",
   "Beyoncé",
@@ -132,14 +112,17 @@ const musique = [
   "Eminem",
   "Linkin Park",
   "Metallica",
-
+  "U2",
+  "Pharell Williams",
+  "Michael Jackson",
+  "Elvis Presley",
   // Artistes francophones
   "Aya Nakamura",
   "Stromae",
   "Angèle",
   "Gims",
   "Vianney",
-  "Maître Gims",
+  "Gims",
   "Dadju",
   "Ninho",
   "Vald",
@@ -149,13 +132,22 @@ const musique = [
   "Jul",
   "SCH",
   "Booba",
-  "Diam’s",
+  "Diam's",
   "M Pokora",
   "Johnny Hallyday",
   "Florent Pagny",
   "Zazie",
   "Mylène Farmer",
-
+  "Etienne Daho",
+  "Laurent Voulzy",
+  "Alain Souchon",
+  "Celine Dion",
+  "Georges Brassens",
+  "Corneille",
+  "Coeur de Pirate",
+  "Francis Cabrel",
+  "Ben Mazué",
+  "Clara Luciani",
   // Groupes célèbres
   "Daft Punk",
   "Queen",
@@ -165,9 +157,11 @@ const musique = [
   "Black Eyed Peas",
   "Maroon 5",
   "Red Hot Chili Peppers",
-];
-
-const jeuxVideo = [
+  "ABBA",
+  "The Rolling Stones",
+  "The Who",
+  "The Police",
+// Jeux vidéos
   "Mario",
   "Luigi",
   "Princesse Peach",
@@ -177,11 +171,8 @@ const jeuxVideo = [
   "Link",
   "Zelda",
   "Ganondorf",
-
+  "Kirby",
   "Sonic",
-  "Tails",
-  "Knuckles",
-
   "Pikachu",
   "Bulbizarre",
   "Salamèche",
@@ -189,45 +180,28 @@ const jeuxVideo = [
   "Mewtwo",
   "Ronflex",
   "Evoli",
-
   "Lara Croft",
-  "Nathan Drake",
-  "Kratos",
-  "Atreus",
-
-  "Master Chief",
-  "Cortana",
-
-  "Geralt",
-  "Yennefer",
-  "Ciri",
-
-  "Trevor Philips",
-  "Michael De Santa",
-  "Franklin Clinton",
-
-  "Steve Minecraft",
-  "Alex Minecraft",
   "Creeper",
   "Enderman",
-
-  "Agent 47",
-  "Ezio Auditore",
-
-  "Sackboy",
-  "Joel",
-  "Ellie",
-
   "Fortnite",
   "Among Us",
   "League of Legends",
   "Valorant",
   "Overwatch",
-  "Genshin Impact",
-  "Cyberpunk 2077",
-];
-
-const lieux = [
+  "Nintendogs",
+  "Wii sport",
+  "Mario Kart",
+  "Pokemon",
+  "GTA",
+  "Minecraft",
+  "Halo",
+  "Call of Duty",
+  "FIFA",
+  "Super Smash Bros",
+  "Animal Crossing",
+  "Dofus",
+  "World of Warcraft",
+// Lieux
   "Paris",
   "Marseille",
   "Lyon",
@@ -238,231 +212,133 @@ const lieux = [
   "Nantes",
   "Lille",
   "Strasbourg",
-
   "Tour Eiffel",
   "Arc de Triomphe",
   "Mont Saint-Michel",
   "Château de Versailles",
-
+  "Le Louvres",
   "New York",
   "San Francisco",
   "Los Angeles",
   "Las Vegas",
   "Chicago",
   "Miami",
-
   "Statue de la Liberté",
   "Central Park",
   "Times Square",
   "Golden Gate Bridge",
-
   "Tokyo",
   "Kyoto",
   "Osaka",
-
   "Londres",
   "Big Ben",
   "Tower Bridge",
   "Buckingham Palace",
-
   "Rome",
   "Colisée",
   "Vatican",
   "Pise",
   "Venise",
-
   "Berlin",
   "Barcelone",
   "Madrid",
-
   "Rio de Janeiro",
   "Christ Rédempteur",
-
   "Sydney",
   "Opéra de Sydney",
-];
-
-const mangas = [
+// Mangas
+  "One Piece",
   "Luffy",
-  "Zoro",
-  "Nami",
-  "Sanji",
-  "Robin",
-  
   "Naruto",
-  "Sasuke",
-  "Sakura",
-  "Kakashi",
-
-  "Goku",
+  "San Goku",
   "Vegeta",
-  "Gohan",
+  "San Gohan",
   "Trunks",
   "Bulma",
-
-  "Tanjiro",
-  "Nezuko",
-  "Zenitsu",
-  "Inosuke",
-
-  "Eren Yeager",
-  "Mikasa",
-  "Armin",
-  "Levi Ackerman",
-
-  "Saitama",
-  "Genos",
-
-  "Light Yagami",
-  "L (Death Note)",
-
-  "Yuji Itadori",
-  "Gojo Satoru",
-  "Megumi Fushiguro",
-];
-
-const creators = [
+// Youtubeurs
   "Squeezie",
   "Cyprien",
-  "Norman",
   "McFly et Carlito",
   "Mister V",
   "Gotaga",
   "Inoxtag",
   "Michou",
   "Joyca",
-  "LeBouseuh",
   "Amixem",
   "Pierre Croce",
-
   "PewDiePie",
   "MrBeast",
-  "Ninja",
-  "Pokimane",
-  "Dream",
-  "Markiplier",
-  "Jacksepticeye",
-];
-
-const series = [
-  "Geralt de Riv",
-  "Yennefer",
-  "Ciri",
-
+// Series
+  "You (Série)",
   "Joe Goldberg",
-  "Love Quinn",
-
-  "Wednesday Addams",
+  "Mercredi (Série)",
+  "Mercredi Addams",
   "Morticia Addams",
-
-  "Joel (The Last of Us)",
-  "Ellie (The Last of Us)",
-
-  "Homelander",
-  "Starlight",
-  "Billy Butcher",
-
-  "Ragnar Lothbrok",
-  "Lagertha",
-
+  "The Office",
   "Michael Scott",
-  "Dwight Schrute",
-  "Jim Halpert",
-  "Pam Beesly",
-
   "Ted Lasso",
-];
-
-const films = [
+// Films
+  "Pirate des Caraibes",
   "Jack Sparrow",
-  "Elizabeth Swann",
-  "Will Turner",
-
+  "Hunger Games",
   "Katniss Everdeen",
-  "Peeta Mellark",
-
-  "Shrek",
-  "Donkey",
-
-  "Elsa",
-  "Anna",
+  "La Reine des Neiges",
   "Olaf",
-
-  "Lightning McQueen",
-  "Mater",
-
-  "Gru",
   "Les Minions",
-
   "Deadpool",
-  "Cable",
-  "Colossus",
-
   "John Wick",
-];
-
-const artistes2 = [
+// Artistes
   "ROSALÍA",
   "Travis Scott",
   "J Balvin",
   "Karol G",
-
-  "Central Cee",
-  "Dave",
+  "Benson Boone",
   "Lil Nas X",
-
   "SCH",
-  "Naps",
-  "Tiakola",
   "Gazo",
   "Zola",
-];
-
-const sport = [
+// Sport
   // Football
   "Kylian Mbappé",
   "Antoine Griezmann",
   "Lionel Messi",
   "Cristiano Ronaldo",
   "Neymar",
+  "Paul Pogba",
   "Karim Benzema",
   "Erling Haaland",
   "Zinedine Zidane",
   "Didier Deschamps",
-
+  "Ousmane Dembelé",
   // Basket
   "LeBron James",
   "Stephen Curry",
   "Michael Jordan",
   "Kobe Bryant",
-  "Giannis Antetokounmpo",
-
+  "Victor Wembanyama",
+  "Tony Parker",
   // Tennis
   "Serena Williams",
   "Roger Federer",
   "Rafael Nadal",
   "Novak Djokovic",
-  "Naomi Osaka",
   "Carlos Alcaraz",
-
+  "Jo-Wilfried Tsonga",
+  "Richard Gasquet",
+  "Yannick Noah",
+  "Gaël Monfils",
   // Sports mécaniques
   "Lewis Hamilton",
   "Max Verstappen",
   "Fernando Alonso",
-
   // Rugby
   "Antoine Dupont",
   "Jonah Lomu",
   "Sébastien Chabal",
-
   // Autres sports connus
   "Usain Bolt",
-  "Tony Parker",
-  "Shaquille O'Neal",
   "Conor McGregor",
-];
-
-const apps = [
+// Applis
   "Instagram",
   "TikTok",
   "YouTube",
@@ -472,14 +348,11 @@ const apps = [
   "Messenger",
   "Discord",
   "Twitch",
-
   "Netflix",
   "Disney+",
   "Prime Video",
-
   "Spotify",
   "Deezer",
-
   "Google Maps",
   "Waze",
   "Uber",
@@ -487,33 +360,26 @@ const apps = [
   "Deliveroo",
   "Airbnb",
   "Doctolib",
-
   "Amazon",
   "Vinted",
   "Leboncoin",
-
   "LinkedIn",
   "Gmail",
   "Google Drive",
-];
-
-const objets = [
+// Objets
   "iPhone",
   "AirPods",
   "Nintendo Switch",
   "PS5",
   "Xbox",
   "GoPro",
-
   "Drone",
   "Casque VR",
   "Tondeuse barbe",
   "Brosse à dents électrique",
   "Micro-onde",
   "Aspirateur robot",
-];
-
-const food = [
+// Nourriture
   "Nutella",
   "McDonald's",
   "Burger King",
@@ -525,9 +391,7 @@ const food = [
   "Pepsi",
   "Kinder Bueno",
   "Haribo",
-];
-
-const marques = [
+// Marques
   // Sport / streetwear
   "Nike",
   "Adidas",
@@ -538,7 +402,6 @@ const marques = [
   "Reebok",
   "The North Face",
   "Patagonia",
-
   // Mode grand public
   "Zara",
   "H&M",
@@ -547,105 +410,69 @@ const marques = [
   "Bershka",
   "Celio",
   "Levi's",
-
   // Luxe / hype
   "Supreme",
   "Gucci",
   "Louis Vuitton",
   "Balenciaga",
   "Off-White",
-
   // Tech / lifestyle
   "Apple",
   "Samsung",
   "IKEA",
   "Decathlon",
   "Lacoste",
-];
-
-const popCulture2 = [
+// Pop Culture
   "Megamind",
   "Baymax",
   "Ralph la Casse",
   "Miraculous Ladybug",
   "Chat Noir",
-
   "Jack-Jack",
   "Elastigirl",
   "Mr Indestructible",
-
   "Harvey Specter",
   "Mike Ross",
   "Donna Paulsen",
   "Louis Litt",
-
   "Katara",
   "Aang",
   "Zuko",
   "Toph Beifong",
-];
-
-const jeuxVideo2 = [
+// Jeux vidéos
   "Kratos",
   "Atreus",
   "Ellie Williams",
-
   "Agent 47",
   "Cloud Strife",
   "Sephiroth",
-
   "Pac-Man",
   "Kirby",
   "Samus Aran",
-
   "Tracer",
   "Widowmaker",
   "Ashe",
-
   "Viper (Valorant)",
   "Jett",
   "Sage",
   "Omen",
-];
-
-const lieux2 = [
+// Lieux
   "Séoul",
   "Pékin",
   "Shanghai",
   "Dubaï",
   "Le Caire",
   "Marrakech",
-
   "Times Square",
   "Walt Disney World",
   "Universal Studios",
-
   "Le Louvre",
   "La Défense",
-
   "Mont Fuji",
 ];
 
 
-export default [
-  ...popCulture,
-  ...popCulture2,
-  ...musique,
-  ...artistes2,
-  ...jeuxVideo,
-  ...jeuxVideo2,
-  ...mangas,
-  ...series,
-  ...films,
-  ...creators,
-  ...sport,
-  ...apps,
-  ...objets,
-  ...food,
-  ...marques,
-  ...lieux,
-  ...lieux2,
-];
+export default names;
 
 // console.log([
 //   ...popCulture,
