@@ -6,16 +6,20 @@
   >
     <div class="w-full max-w-3xl">
       <div class="bg-linear-to-br from-pastelblue-500 to-pastelpink-500 p-1 rounded-4xl shadow-2xl">
+        
         <div
-          class="bg-white/85 backdrop-blur-xl rounded-[28px] p-6 md:p-10 flex flex-col gap-6"
+          class="bg-white/85 backdrop-blur-xl rounded-[28px] p-6 md:p-8 flex flex-col gap-6"
         >
-          <header class="flex flex-col gap-2 text-center md:text-left">
+          <header class="flex flex-col gap-4 text-center md:text-left">
             <p class="text-xs uppercase tracking-[0.3em] text-pastelblue-500 font-semibold">
               🌈 Mode complicité
             </p>
-            <h1 id="index-title" class="text-3xl md:text-4xl font-bold text-slate-800">
-              Jeu de la complicité
-            </h1>
+            <div class="flex items-center justify-center md:justify-start gap-3">
+              
+              <h1 id="index-title" class="text-3xl md:text-4xl font-bold text-slate-800">
+                Jeu de la complicité
+              </h1>
+            </div>
             <p class="text-slate-600">
               Choisis les équipes, donne-leur un nom et démarre une partie complice en quelques secondes ✨
             </p>
@@ -88,9 +92,17 @@
           </button>
         </section>
 
+        <img
+          src="/favicon-512.png"
+          alt=""
+          role="presentation"
+          class="w-12 h-12 mx-auto"
+        />
+
         <p class="text-xs text-slate-500 text-center flex items-center justify-center gap-1">
           Une grande banque de références pop est prête pour le Jeu de la complicité. (+400 mots)
         </p>
+        
       </div>
     </div>
   </div>

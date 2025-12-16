@@ -227,7 +227,7 @@
           Règles du jeu
         </h2>
         <div
-          class="text-sm text-slate-700 flex flex-col gap-2 max-h-80 overflow-y-auto pr-1"
+          class="text-sm text-slate-700 flex flex-col gap-2 max-h-90 overflow-y-auto pr-1"
         >
           <p><strong>Nombre de joueurs :</strong> 4 ou 6 joueurs.</p>
           <ul class="list-disc list-inside space-y-1">
@@ -250,6 +250,14 @@
             trouve en premier. La partie dure <strong>10 manches</strong>. L’équipe avec le plus de points
             gagne.
           </p>
+          <div class="flex justify-center mt-4">
+            <img
+              src="/favicon-512.png"
+              alt=""
+              role="presentation"
+              class="w-8 h-8"
+            />
+          </div>
         </div>
       </div>
     </div>
