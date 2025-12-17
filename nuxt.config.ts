@@ -22,7 +22,7 @@ export default defineNuxtConfig({
 
   // ✅ URL de ton site, utilisée par le sitemap pour générer les URLs absolues
   site: {
-    url: "https://jeu-de-la-complicite.vercel.app",
+    url: "https://jeu-de-la-complicite.fr",
     name: "Le jeu de la complicité",
   },
 
@@ -37,7 +37,7 @@ export default defineNuxtConfig({
     // autorise tout pour tous les robots
     allow: ["/"],
     // indique où se trouve ton sitemap
-    sitemap: ["https://jeu-de-la-complicite.vercel.app/sitemap.xml"],
+    sitemap: ["https://jeu-de-la-complicite.fr/sitemap.xml"],
   },
 });
 
