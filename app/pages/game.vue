@@ -53,8 +53,11 @@
               ⏱ Temps
             </p>
             <p
-              class="text-lg font-mono font-semibold"
-              :class="timeLeft === 0 ? 'text-red-500' : 'text-slate-800'"
+              class="text-lg font-mono font-semibold transition-all duration-150 ease-out origin-center"
+              :class="[
+                isTimeOver ? 'text-red-500' : isTimeEnding ? 'text-orange-500' : 'text-slate-800',
+                tickPulse ? 'scale-105' : 'scale-100'
+              ]"
               aria-live="polite"
             >
               {{ formattedTimeLeft }}
@@ -207,6 +210,43 @@
               </span>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal temps écoulé -->
+    <div
+      v-if="showTimeUpModal"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-3xl max-w-md w-full mx-4 p-6 shadow-2xl relative text-center">
+        <button
+          class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700"
+          @click="handleCloseTimeUpModal"
+        >
+          ✕
+        </button>
+        <div class="flex flex-col items-center gap-3">
+          <div class="text-5xl animate-pulse">⏰</div>
+          <h2 class="text-2xl font-bold text-slate-800">
+            Temps écoulé
+          </h2>
+          <p class="text-sm text-slate-700">
+            Manche perdue pour
+            <span class="font-semibold text-pastelpink-800">
+              {{ timeoutContext?.loser || "l'équipe active" }}
+            </span>.
+            Le point revient à
+            <span class="font-semibold text-pastelgreen-800">
+              {{ timeoutContext?.winner || "l'autre équipe" }}
+            </span>.
+          </p>
+          <button
+            class="mt-2 px-4 py-2 rounded-full text-sm font-semibold bg-pastelblue-500 text-slate-900 hover:bg-pastelblue-500/80"
+            @click="handleCloseTimeUpModal"
+          >
+            Passer au tour suivant
+          </button>
         </div>
       </div>
     </div>
@@ -482,10 +522,14 @@ const roundReady = ref(false);
 /**
  * Timer de manche : 3 minutes (180 secondes)
  */
-const ROUND_DURATION = 3 * 60; // 180s
-const timeLeft = ref(ROUND_DURATION);
+const ROUND_DURATION_MS = 3 * 60 * 1000; // 180s
+const timeLeftMs = ref(ROUND_DURATION_MS);
 const timerRunning = ref(false);
 let timerId: ReturnType<typeof setInterval> | null = null;
+let roundEndTime = 0;
+const showTimeUpModal = ref(false);
+const timeoutContext = ref<{ loser: string; winner: string } | null>(null);
+const tickPulse = ref(false);
 
 const hasNamedTeams = computed(() =>
   teams.value
@@ -508,12 +552,30 @@ if (import.meta.client) {
 
 
 const formattedTimeLeft = computed(() => {
-  const minutes = Math.floor(timeLeft.value / 60);
-  const seconds = timeLeft.value % 60;
+  const ms = Math.max(0, timeLeftMs.value);
+  const minutes = Math.floor(ms / 60000);
+  const seconds = Math.floor((ms % 60000) / 1000);
   const minStr = minutes.toString().padStart(1, "0");
   const secStr = seconds.toString().padStart(2, "0");
+
+  if (ms <= 10000) {
+    const milliStr = Math.floor(ms % 1000)
+      .toString()
+      .padStart(3, "0");
+    return `${minStr}:${secStr}.${milliStr}`;
+  }
+
   return `${minStr}:${secStr}`;
 });
+
+const isTimeEnding = computed(
+  () => timeLeftMs.value <= 10000 && timeLeftMs.value > 0
+);
+const isTimeOver = computed(() => timeLeftMs.value <= 0);
+
+const remainingSecondsCeil = computed(() =>
+  Math.ceil(timeLeftMs.value / 1000)
+);
 
 function stopTimer() {
   if (timerId) {
@@ -525,17 +587,29 @@ function stopTimer() {
 
 function startTimer() {
   stopTimer();
-  timeLeft.value = ROUND_DURATION;
+  timeLeftMs.value = ROUND_DURATION_MS;
+  roundEndTime = Date.now() + ROUND_DURATION_MS;
   timerRunning.value = true;
+  showTimeUpModal.value = false;
+  timeoutContext.value = null;
 
   timerId = setInterval(() => {
-    if (timeLeft.value > 0) {
-      timeLeft.value -= 1;
+    const remaining = roundEndTime - Date.now();
+    if (remaining > 0) {
+      timeLeftMs.value = remaining;
     } else {
-      timeLeft.value = 0;
       stopTimer();
+      timeLeftMs.value = 0;
+      handleTimeExpired();
     }
-  }, 1000);
+  }, 50);
+}
+
+function triggerTickPulse() {
+  tickPulse.value = true;
+  setTimeout(() => {
+    tickPulse.value = false;
+  }, 150);
 }
 
 /**
@@ -569,7 +643,9 @@ function handleAwardPoint(teamIndex: number) {
 function handleReset() {
   stopTimer();
   roundReady.value = false;
-  timeLeft.value = ROUND_DURATION;
+  timeLeftMs.value = ROUND_DURATION_MS;
+  showTimeUpModal.value = false;
+  timeoutContext.value = null;
   resetGame();
   showResultModal.value = false;
   showReplayModal.value = false;
@@ -579,7 +655,9 @@ function handleReset() {
 function handleReplaySameTeams() {
   stopTimer();
   roundReady.value = false;
-  timeLeft.value = ROUND_DURATION;
+  timeLeftMs.value = ROUND_DURATION_MS;
+  showTimeUpModal.value = false;
+  timeoutContext.value = null;
   showReplayModal.value = false;
   showResultModal.value = false;
   const restarted = startGame();
@@ -608,6 +686,30 @@ function saveTeamNames() {
   showTeamsModal.value = false;
 }
 
+function handleTimeExpired() {
+  if (showTimeUpModal.value) return;
+  const losingName = currentTeam.value?.name || "équipe active";
+  const receiverIndex =
+    nbTeams.value > 1
+      ? (currentTeamIndex.value + 1) % nbTeams.value
+      : currentTeamIndex.value;
+  const receiverName = teams.value[receiverIndex]?.name || "autre équipe";
+
+  timeoutContext.value = {
+    loser: losingName,
+    winner: receiverName,
+  };
+
+  roundReady.value = false;
+  showTimeUpModal.value = true;
+  awardPoint(receiverIndex);
+}
+
+function handleCloseTimeUpModal() {
+  showTimeUpModal.value = false;
+  timeLeftMs.value = ROUND_DURATION_MS;
+}
+
 /**
  * Si la partie se termine, on coupe le timer
  */
@@ -620,6 +722,20 @@ watch(
       showResultModal.value = true;
     } else {
       showResultModal.value = false;
+    }
+  }
+);
+
+watch(
+  () => remainingSecondsCeil.value,
+  (newVal, oldVal) => {
+    if (
+      newVal <= 10 &&
+      newVal >= 0 &&
+      newVal !== oldVal &&
+      timeLeftMs.value > 0
+    ) {
+      triggerTickPulse();
     }
   }
 );

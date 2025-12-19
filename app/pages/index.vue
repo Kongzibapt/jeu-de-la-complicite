@@ -44,7 +44,7 @@
               >
                 2 équipes
                 <br class="sm:hidden" />
-                <span class="text-xs">👫 (4 joueurs)</span>
+                <span class="text-xs">(4 joueurs)</span>
               </button>
               <button
                 class="flex-1 px-3 py-2 rounded-xl border text-sm md:text-base"
@@ -54,7 +54,7 @@
               >
                 3 équipes
                 <br class="sm:hidden" />
-                <span class="text-xs">👬 (6 joueurs)</span>
+                <span class="text-xs">(6 joueurs)</span>
               </button>
             </div>
           </div>
@@ -100,7 +100,7 @@
         />
 
         <p class="text-xs text-slate-500 text-center flex items-center justify-center gap-1">
-          Une grande banque de références pop est prête pour le Jeu de la complicité. (+400 mots)
+          Une grande banque de références est prête pour le Jeu de la complicité. (+de 600 mots)
         </p>
         
       </div>
