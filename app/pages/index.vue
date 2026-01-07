@@ -93,7 +93,7 @@
         </section>
 
         <img
-          src="/favicon-512.png"
+          src="/logo.webp"
           alt=""
           role="presentation"
           class="w-12 h-12 mx-auto"

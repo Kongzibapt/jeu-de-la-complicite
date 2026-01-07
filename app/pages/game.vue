@@ -292,7 +292,7 @@
           </p>
           <div class="flex justify-center mt-4">
             <img
-              src="/favicon-512.png"
+              src="/logo.webp"
               alt=""
               role="presentation"
               class="w-8 h-8"
