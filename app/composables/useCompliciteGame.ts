@@ -19,11 +19,13 @@ type PersistedGameState = {
   gameStarted: boolean;
   gameOver: boolean;
   rerollsLeft: number;
+  totalRounds: number;
+  maxRerollsPerRound: number;
+  roundDurationMs: number;
+  isSuddenDeath: boolean;
 };
 
 export const useCompliciteGame = () => {
-  const totalRounds = 10;
-
   const nbTeams = useState<2 | 3>("nbTeams", () => 2);
   const teams = useState<Team[]>("teams", () => [
     { name: "", score: 0 },
@@ -38,8 +40,12 @@ export const useCompliciteGame = () => {
   const gameOver = useState<boolean>("gameOver", () => false);
   const storageHydrated = useState<boolean>("complicite:storage-hydrated", () => false);
 
-  const maxRerollsPerRound = 3;
-  const rerollsLeft = useState<number>("rerollsLeft", () => maxRerollsPerRound);
+  const totalRounds = useState<number>("totalRounds", () => 10);
+  const maxRerollsPerRound = useState<number>("maxRerollsPerRound", () => 3);
+  const roundDurationMs = useState<number>("roundDurationMs", () => 90 * 1000);
+  const isSuddenDeath = useState<boolean>("isSuddenDeath", () => false);
+
+  const rerollsLeft = useState<number>("rerollsLeft", () => maxRerollsPerRound.value);
 
   function readPersistedState(): Partial<PersistedGameState> | null {
     if (typeof window === "undefined") return null;
@@ -72,6 +78,10 @@ export const useCompliciteGame = () => {
       gameStarted: gameStarted.value,
       gameOver: gameOver.value,
       rerollsLeft: rerollsLeft.value,
+      totalRounds: totalRounds.value,
+      maxRerollsPerRound: maxRerollsPerRound.value,
+      roundDurationMs: roundDurationMs.value,
+      isSuddenDeath: isSuddenDeath.value,
     };
   }
 
@@ -99,7 +109,6 @@ export const useCompliciteGame = () => {
           name: typeof team?.name === "string" ? team.name : "",
           score: typeof team?.score === "number" ? team.score : 0,
         }));
-
       teams.value = normalized;
     }
     ensureTeamSlots();
@@ -134,6 +143,22 @@ export const useCompliciteGame = () => {
     if (typeof state.rerollsLeft === "number") {
       rerollsLeft.value = state.rerollsLeft;
     }
+
+    if (typeof state.totalRounds === "number" && state.totalRounds >= 1) {
+      totalRounds.value = state.totalRounds;
+    }
+
+    if (typeof state.maxRerollsPerRound === "number" && state.maxRerollsPerRound >= 0) {
+      maxRerollsPerRound.value = state.maxRerollsPerRound;
+    }
+
+    if (typeof state.roundDurationMs === "number" && state.roundDurationMs > 0) {
+      roundDurationMs.value = state.roundDurationMs;
+    }
+
+    if (typeof state.isSuddenDeath === "boolean") {
+      isSuddenDeath.value = state.isSuddenDeath;
+    }
   }
 
   if (import.meta.client && !storageHydrated.value) {
@@ -154,7 +179,6 @@ export const useCompliciteGame = () => {
       { deep: true }
     );
   }
-  
 
   const currentTeam = computed(() => teams.value[currentTeamIndex.value] || null);
 
@@ -197,7 +221,6 @@ export const useCompliciteGame = () => {
 
     const usedSet = new Set(usedIndices.value);
 
-    // Si on a presque tout utilisé, on repart à zéro pour éviter le blocage
     if (usedSet.size >= names.length - 1) {
       usedSet.clear();
     }
@@ -224,15 +247,10 @@ export const useCompliciteGame = () => {
     secretWord.value = names[index];
 
     if (resetRerolls) {
-      rerollsLeft.value = maxRerollsPerRound;
+      rerollsLeft.value = maxRerollsPerRound.value;
     }
   }
 
-  /**
-   * Tirer le premier mot de la manche :
-   * - ne consomme pas de reroll
-   * - n’affecte pas rerollsLeft (qui doit déjà être à 3)
-   */
   function startRoundIfNeeded() {
     if (!secretWord.value) {
       drawWord(false);
@@ -246,10 +264,11 @@ export const useCompliciteGame = () => {
 
     gameStarted.value = true;
     gameOver.value = false;
+    isSuddenDeath.value = false;
     currentRound.value = 1;
     currentTeamIndex.value = 0;
     usedIndices.value = [];
-    rerollsLeft.value = maxRerollsPerRound;
+    rerollsLeft.value = maxRerollsPerRound.value;
     secretWord.value = null;
 
     teams.value = teams.value.slice(0, nbTeams.value);
@@ -260,18 +279,18 @@ export const useCompliciteGame = () => {
 
     writePersistedState(snapshotState());
 
-    // On attend maintenant le clic sur "Prêt" pour tirer le premier mot
     return true;
   }
 
   function resetGame() {
     gameStarted.value = false;
     gameOver.value = false;
+    isSuddenDeath.value = false;
     currentRound.value = 1;
     currentTeamIndex.value = 0;
     secretWord.value = null;
     usedIndices.value = [];
-    rerollsLeft.value = maxRerollsPerRound;
+    rerollsLeft.value = maxRerollsPerRound.value;
 
     teams.value = Array.from({ length: nbTeams.value }, () => ({
       name: "",
@@ -279,9 +298,6 @@ export const useCompliciteGame = () => {
     }));
   }
 
-  /**
-   * Tirage d’un nouveau mot pendant la manche (consomme 1 reroll)
-   */
   function drawNewWord() {
     if (!gameStarted.value) return;
     if (rerollsLeft.value <= 0) return;
@@ -291,7 +307,15 @@ export const useCompliciteGame = () => {
   }
 
   function nextRound() {
-    if (currentRound.value >= totalRounds) {
+    if (isSuddenDeath.value) {
+      // Timeout during sudden death: rotate team and reset word, keep playing
+      currentTeamIndex.value = (currentTeamIndex.value + 1) % nbTeams.value;
+      secretWord.value = null;
+      rerollsLeft.value = maxRerollsPerRound.value;
+      return;
+    }
+
+    if (currentRound.value >= totalRounds.value) {
       gameOver.value = true;
       gameStarted.value = false;
       return;
@@ -299,10 +323,8 @@ export const useCompliciteGame = () => {
 
     currentRound.value += 1;
     currentTeamIndex.value = (currentTeamIndex.value + 1) % nbTeams.value;
-
-    // On prépare la manche suivante sans tirer le mot
     secretWord.value = null;
-    rerollsLeft.value = maxRerollsPerRound;
+    rerollsLeft.value = maxRerollsPerRound.value;
   }
 
   function awardPoint(teamIndex: number) {
@@ -310,7 +332,23 @@ export const useCompliciteGame = () => {
 
     // @ts-ignore
     teams.value[teamIndex].score += 1;
+
+    if (isSuddenDeath.value) {
+      isSuddenDeath.value = false;
+      gameOver.value = true;
+      gameStarted.value = false;
+      return;
+    }
+
     nextRound();
+  }
+
+  function startSuddenDeath() {
+    isSuddenDeath.value = true;
+    gameOver.value = false;
+    gameStarted.value = true;
+    secretWord.value = null;
+    rerollsLeft.value = maxRerollsPerRound.value;
   }
 
   return {
@@ -324,6 +362,8 @@ export const useCompliciteGame = () => {
     gameOver,
     rerollsLeft,
     maxRerollsPerRound,
+    roundDurationMs,
+    isSuddenDeath,
     currentTeam,
     otherTeams,
     winners,
@@ -336,6 +376,8 @@ export const useCompliciteGame = () => {
     resetGame,
     drawNewWord,
     awardPoint,
+    nextRound,
     startRoundIfNeeded,
+    startSuddenDeath,
   };
 };

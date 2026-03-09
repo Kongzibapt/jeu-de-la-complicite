@@ -29,7 +29,7 @@ export default defineNuxtConfig({
   // ✅ Config minimale du sitemap (en vrai il pourrait fonctionner sans rien ici)
   sitemap: {
     autoLastmod: true,
-    urls: ["/", "/game"], // optionnel, les pages seront déjà découvertes automatiquement
+    urls: ["/"], // /game est une interface JS pure, exclue du sitemap
   },
 
   // ✅ robots.txt simple qui autorise tout + pointe vers ton sitemap
