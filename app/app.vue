@@ -36,13 +36,7 @@ useHead({
   ]
 });
 
-declare function gtag(...args: unknown[]): void;
-
-function trackEvent(name: string, params?: Record<string, string>) {
-  if (typeof gtag !== 'undefined') {
-    gtag('event', name, params ?? {});
-  }
-}
+const { trackEvent } = useAnalytics();
 
 const fabOpen = ref(false);
 const showSuggestionForm = ref(false);

@@ -121,7 +121,7 @@
             <button
               class="px-4 py-2 rounded-full text-sm font-semibold bg-pastelblue-500 hover:bg-pastelblue-500/80 disabled:opacity-50 flex items-center gap-2"
               :disabled="!gameStarted || !roundReady || rerollsLeft === 0"
-              @click="drawNewWord"
+              @click="handleDrawNewWord"
             >
               Tirer un nouveau mot
             </button>
@@ -667,6 +667,7 @@ const router = useRouter();
  * État : manche en cours ou en attente du bouton "Prêt"
  */
 const roundReady = ref(false);
+const { trackEvent } = useAnalytics();
 
 const timeLeftMs = ref(roundDurationMs.value);
 const timerRunning = ref(false);
@@ -788,6 +789,7 @@ function handleReady() {
   roundReady.value = true;
   startRoundIfNeeded();
   startTimer();
+  trackEvent('round_start', { round: currentRound.value, team: currentTeam.value?.name ?? '' });
 }
 
 /**
@@ -806,6 +808,7 @@ function handleAwardPoint(teamIndex: number) {
   if (!gameStarted.value || !roundReady.value) return;
   const isSteal = teamIndex !== currentTeamIndex.value;
   const scoringName = teams.value[teamIndex]?.name ?? '';
+  trackEvent('round_scored', { round: currentRound.value, scorer: scoringName, is_steal: isSteal, is_sudden_death: isSuddenDeath.value });
   stopTimer();
   awardPoint(teamIndex); // gère currentRound + gameOver
   roundReady.value = false;
@@ -835,6 +838,7 @@ function handleReset() {
 }
 
 function handleReplaySameTeams() {
+  trackEvent('game_replay', { mode: 'same_teams' });
   stopTimer();
   closeRoundTransition();
   roundReady.value = false;
@@ -850,6 +854,7 @@ function handleReplaySameTeams() {
 }
 
 function handleSuddenDeath() {
+  trackEvent('sudden_death_start', { tied_score: winners.value[0]?.score ?? 0 });
   showResultModal.value = false;
   roundReady.value = false;
   timeLeftMs.value = roundDurationMs.value;
@@ -857,6 +862,7 @@ function handleSuddenDeath() {
 }
 
 function handleReplayNewTeams() {
+  trackEvent('game_replay', { mode: 'new_teams' });
   showReplayModal.value = false;
   showResultModal.value = false;
   handleReset();
@@ -876,9 +882,15 @@ function saveTeamNames() {
   showTeamsModal.value = false;
 }
 
+function handleDrawNewWord() {
+  trackEvent('word_reroll', { round: currentRound.value, rerolls_left: rerollsLeft.value - 1 });
+  drawNewWord();
+}
+
 function handleTimeExpired() {
   if (showTimeUpModal.value) return;
   const losingName = currentTeam.value?.name || "équipe active";
+  trackEvent('round_timeout', { round: currentRound.value, losing_team: losingName, is_sudden_death: isSuddenDeath.value });
 
   timeoutContext.value = { loser: losingName };
 
@@ -902,6 +914,13 @@ watch(
       stopTimer();
       roundReady.value = false;
       showResultModal.value = true;
+      const win = winners.value;
+      trackEvent('game_complete', {
+        winner: win.length === 1 ? (win[0]?.name ?? '') : 'tie',
+        winner_score: win[0]?.score ?? 0,
+        is_tie: win.length > 1,
+        total_rounds: currentRound.value,
+      });
     } else {
       showResultModal.value = false;
     }

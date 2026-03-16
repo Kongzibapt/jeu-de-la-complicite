@@ -93,7 +93,7 @@
 
           <button
             class="text-xs text-slate-500 underline underline-offset-2 self-center mt-1"
-            @click="showSettings = true"
+            @click="() => { showSettings = true; trackEvent('settings_open'); }"
           >
             ⚙️ Paramètres de jeu
           </button>
@@ -273,6 +273,7 @@ const {
 } = useCompliciteGame();
 
 const showSettings = ref(false);
+const { trackEvent } = useAnalytics();
 
 const durationOptions = [
   { ms: 60 * 1000, label: '1 min' },
@@ -285,6 +286,12 @@ function goToGame() {
   if (!startGame()) {
     return;
   }
+  trackEvent('game_start', {
+    nb_teams: nbTeams.value,
+    total_rounds: totalRounds.value,
+    round_duration_s: Math.round(roundDurationMs.value / 1000),
+    max_rerolls: maxRerollsPerRound.value,
+  });
   router.push("/game");
 }
 </script>
