@@ -36,25 +36,45 @@ useHead({
   ]
 });
 
+declare function gtag(...args: unknown[]): void;
+
+function trackEvent(name: string, params?: Record<string, string>) {
+  if (typeof gtag !== 'undefined') {
+    gtag('event', name, params ?? {});
+  }
+}
+
 const fabOpen = ref(false);
 const showSuggestionForm = ref(false);
 const suggestionText = ref('');
 
 function toggleFab() {
   fabOpen.value = !fabOpen.value;
-  if (!fabOpen.value) {
+  if (fabOpen.value) {
+    trackEvent('fab_open');
+  } else {
     showSuggestionForm.value = false;
     suggestionText.value = '';
   }
 }
 
+function openSuggestionForm() {
+  showSuggestionForm.value = true;
+  trackEvent('fab_suggestion_open');
+}
+
 function sendSuggestion() {
+  trackEvent('fab_suggestion_sent');
   const subject = encodeURIComponent('Suggestion — Jeu de la complicité');
   const body = encodeURIComponent(suggestionText.value.trim());
   window.open(`mailto:baptiste1296@gmail.com?subject=${subject}&body=${body}`, '_self');
   fabOpen.value = false;
   showSuggestionForm.value = false;
   suggestionText.value = '';
+}
+
+function trackDonation() {
+  trackEvent('fab_donation_click');
 }
 </script>
 
@@ -76,7 +96,7 @@ function sendSuggestion() {
         <div v-if="!showSuggestionForm" class="flex flex-col gap-2">
           <button
             class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-pastelblue-500/20 transition text-left w-full"
-            @click="showSuggestionForm = true"
+            @click="openSuggestionForm"
           >
             <span class="text-xl" aria-hidden="true">💡</span>
             <div>
@@ -89,6 +109,7 @@ function sendSuggestion() {
             target="_blank"
             rel="noopener noreferrer"
             class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-pastelyellow-500/40 transition text-left w-full"
+            @click="trackDonation"
           >
             <span class="text-xl" aria-hidden="true">☕</span>
             <div>
