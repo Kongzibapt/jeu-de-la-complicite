@@ -1,6 +1,8 @@
 // composables/useCompliciteGame.ts
-import names from "@/data/names";
+import names, { categories } from "@/data/names";
 import { computed, watch } from "vue";
+
+export { categories };
 
 const STORAGE_KEY = "complicite-game-state";
 
@@ -23,6 +25,7 @@ type PersistedGameState = {
   maxRerollsPerRound: number;
   roundDurationMs: number;
   isSuddenDeath: boolean;
+  selectedCategories: string[];
 };
 
 export const useCompliciteGame = () => {
@@ -44,6 +47,7 @@ export const useCompliciteGame = () => {
   const maxRerollsPerRound = useState<number>("maxRerollsPerRound", () => 3);
   const roundDurationMs = useState<number>("roundDurationMs", () => 90 * 1000);
   const isSuddenDeath = useState<boolean>("isSuddenDeath", () => false);
+  const selectedCategories = useState<string[]>("selectedCategories", () => categories.map((c) => c.name));
 
   const rerollsLeft = useState<number>("rerollsLeft", () => maxRerollsPerRound.value);
 
@@ -82,6 +86,7 @@ export const useCompliciteGame = () => {
       maxRerollsPerRound: maxRerollsPerRound.value,
       roundDurationMs: roundDurationMs.value,
       isSuddenDeath: isSuddenDeath.value,
+      selectedCategories: selectedCategories.value,
     };
   }
 
@@ -159,6 +164,10 @@ export const useCompliciteGame = () => {
     if (typeof state.isSuddenDeath === "boolean") {
       isSuddenDeath.value = state.isSuddenDeath;
     }
+
+    if (Array.isArray(state.selectedCategories) && state.selectedCategories.length > 0) {
+      selectedCategories.value = state.selectedCategories;
+    }
   }
 
   if (import.meta.client && !storageHydrated.value) {
@@ -216,35 +225,33 @@ export const useCompliciteGame = () => {
     team.name = name;
   }
 
-  function getRandomIndex(): number {
-    if (!names.length) return 0;
+  const activeWordPool = computed(() => {
+    const selected = new Set(selectedCategories.value);
+    return categories
+      .filter((c) => selected.has(c.name))
+      .flatMap((c) => c.words);
+  });
+
+  function drawWord(resetRerolls: boolean = false) {
+    const pool = activeWordPool.value;
+    if (!pool.length) {
+      secretWord.value = "Aucune catégorie sélectionnée";
+      return;
+    }
 
     const usedSet = new Set(usedIndices.value);
-
-    if (usedSet.size >= names.length - 1) {
+    if (usedSet.size >= pool.length - 1) {
       usedSet.clear();
     }
 
-    let index = Math.floor(Math.random() * names.length);
+    let index = Math.floor(Math.random() * pool.length);
     while (usedSet.has(index)) {
-      index = Math.floor(Math.random() * names.length);
+      index = Math.floor(Math.random() * pool.length);
     }
 
     usedSet.add(index);
     usedIndices.value = Array.from(usedSet);
-
-    return index;
-  }
-
-  function drawWord(resetRerolls: boolean = false) {
-    if (!names.length) {
-      secretWord.value = "Aucun nom disponible 😅 (complète data/names.ts)";
-      return;
-    }
-
-    const index = getRandomIndex();
-    // @ts-ignore
-    secretWord.value = names[index];
+    secretWord.value = pool[index]!;
 
     if (resetRerolls) {
       rerollsLeft.value = maxRerollsPerRound.value;
@@ -364,6 +371,7 @@ export const useCompliciteGame = () => {
     maxRerollsPerRound,
     roundDurationMs,
     isSuddenDeath,
+    selectedCategories,
     currentTeam,
     otherTeams,
     winners,

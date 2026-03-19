@@ -567,6 +567,8 @@
 </template>
 
 <script setup lang="ts">
+import { categories } from '@/data/names';
+
 const siteName = "Jeu de la complicité";
 const canonicalUrl = "https://jeu-de-la-complicite.fr/game";
 const pageTitle = "Jeu de la complicité | Partie en cours";
@@ -602,8 +604,8 @@ useSeoMeta({
   twitterCard: "summary_large_image",
   twitterTitle: pageTitle,
   twitterDescription: pageDescription,
-  twitterImage: "https://jeu-de-la-complicite.fr/og-image.webp",
-  ogImage: "https://jeu-de-la-complicite.fr/og-image.webp",
+  twitterImage: "https://jeu-de-la-complicite.fr/og-image.png",
+  ogImage: "https://jeu-de-la-complicite.fr/og-image.png",
 });
 
 useHead({
@@ -668,6 +670,30 @@ const router = useRouter();
  */
 const roundReady = ref(false);
 const { trackEvent } = useAnalytics();
+
+// Word impression tracking
+const wordCategoryMap = new Map<string, string>(
+  categories.flatMap((cat) => cat.words.map((word) => [word, cat.name] as [string, string]))
+);
+let wordShownAt: number | null = null;
+let trackedWord: string | null = null;
+
+function recordWordShown() {
+  wordShownAt = Date.now();
+  trackedWord = secretWord.value;
+}
+
+function flushWordImpression(outcome: 'rerolled' | 'scored' | 'timeout') {
+  if (!trackedWord || wordShownAt === null) return;
+  trackEvent('word_impression', {
+    word: trackedWord,
+    category: wordCategoryMap.get(trackedWord) ?? 'unknown',
+    duration_s: Math.round((Date.now() - wordShownAt) / 1000),
+    outcome,
+  });
+  wordShownAt = null;
+  trackedWord = null;
+}
 
 const timeLeftMs = ref(roundDurationMs.value);
 const timerRunning = ref(false);
@@ -788,6 +814,7 @@ function handleReady() {
   if (!gameStarted.value || gameOver.value) return;
   roundReady.value = true;
   startRoundIfNeeded();
+  recordWordShown();
   startTimer();
   trackEvent('round_start', { round: currentRound.value, team: currentTeam.value?.name ?? '' });
 }
@@ -806,6 +833,7 @@ function closeRoundTransition() {
 
 function handleAwardPoint(teamIndex: number) {
   if (!gameStarted.value || !roundReady.value) return;
+  flushWordImpression('scored');
   const isSteal = teamIndex !== currentTeamIndex.value;
   const scoringName = teams.value[teamIndex]?.name ?? '';
   trackEvent('round_scored', { round: currentRound.value, scorer: scoringName, is_steal: isSteal, is_sudden_death: isSuddenDeath.value });
@@ -883,12 +911,15 @@ function saveTeamNames() {
 }
 
 function handleDrawNewWord() {
+  flushWordImpression('rerolled');
   trackEvent('word_reroll', { round: currentRound.value, rerolls_left: rerollsLeft.value - 1 });
   drawNewWord();
+  recordWordShown();
 }
 
 function handleTimeExpired() {
   if (showTimeUpModal.value) return;
+  flushWordImpression('timeout');
   const losingName = currentTeam.value?.name || "équipe active";
   trackEvent('round_timeout', { round: currentRound.value, losing_team: losingName, is_sudden_death: isSuddenDeath.value });
 
@@ -943,6 +974,8 @@ watch(
 
 onBeforeUnmount(() => {
   stopTimer();
+  wordShownAt = null;
+  trackedWord = null;
   if (scoreToastTimer) clearTimeout(scoreToastTimer);
   if (roundTransitionTimer) clearTimeout(roundTransitionTimer);
 });
