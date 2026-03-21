@@ -257,6 +257,11 @@ export const categories: WordCategory[] = [
       "Léonard de Vinci", "Michel-Ange", "Shakespeare", "Victor Hugo", "Molière",
       "Van Gogh", "Picasso", "Mozart",
       "Gandhi", "Martin Luther King", "Che Guevara", "Christophe Colomb", "Simone de Beauvoir",
+      "Vercingétorix", "Marco Polo", "Louis XVI", "Robespierre",
+      "Frida Kahlo", "Salvador Dali", "Claude Monet", "Auguste Rodin", "Rembrandt",
+      "Beethoven", "Bach",
+      "Voltaire", "Rousseau", "Karl Marx", "Nietzsche", "Jean-Paul Sartre", "Albert Camus",
+      "Marcel Proust", "Dostoïevski",
     ],
   },
   {
